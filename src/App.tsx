@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { YearlyUtilization } from './components/YearlyUtilization';
+import { MemberManagement } from './components/MemberManagement';
+import { ProjectManagement } from './components/ProjectManagement';
+import { Analytics } from './components/Analytics';
 import { LayoutDashboard, Target, Users, FolderKanban, BarChart3 } from 'lucide-react';
 
 type Page = 'dashboard' | 'yearly' | 'members' | 'projects' | 'analytics';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+
+  // Mock user for demo (백엔드 없이 작동)
+  const user = {
+    id: 'demo',
+    name: '데모 사용자',
+    role: 'admin'
+  };
 
   const navigation = [
     { id: 'dashboard' as Page, name: '대시보드', icon: LayoutDashboard },
@@ -29,6 +39,14 @@ function App() {
               <p className="text-base text-gray-600 dark:text-gray-400 mt-1">
                 인력관리 시스템 | 총 66명 | 목표 90%
               </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-right">
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">{user.name}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {user.role === 'admin' ? '관리자' : user.role === 'manager' ? '매니저' : '일반 사용자'}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -69,31 +87,9 @@ function App() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'yearly' && <YearlyUtilization />}
-        {currentPage === 'members' && (
-          <div className="text-center py-20">
-            <Users className="h-24 w-24 mx-auto mb-6 text-gray-400" />
-            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">구성원 관리</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">66명의 팀원 정보를 관리할 수 있습니다.</p>
-          </div>
-        )}
-        {currentPage === 'projects' && (
-          <div className="text-center py-20">
-            <FolderKanban className="h-24 w-24 mx-auto mb-6 text-gray-400" />
-            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">프로젝트 관리</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
-              프로젝트 생성, 팀 구성, 검토 프로세스를 관리할 수 있습니다.
-            </p>
-          </div>
-        )}
-        {currentPage === 'analytics' && (
-          <div className="text-center py-20">
-            <BarChart3 className="h-24 w-24 mx-auto mb-6 text-gray-400" />
-            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">분석 및 리포팅</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
-              월별/분기별 Manmonth 추이 및 상세 분석을 확인할 수 있습니다.
-            </p>
-          </div>
-        )}
+        {currentPage === 'members' && <MemberManagement />}
+        {currentPage === 'projects' && <ProjectManagement />}
+        {currentPage === 'analytics' && <Analytics />}
       </main>
 
       {/* 푸터 */}
