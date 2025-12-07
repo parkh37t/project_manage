@@ -1,0 +1,111 @@
+import React, { useState } from 'react';
+import { Dashboard } from './components/Dashboard';
+import { YearlyUtilization } from './components/YearlyUtilization';
+import { LayoutDashboard, Target, Users, FolderKanban, BarChart3 } from 'lucide-react';
+
+type Page = 'dashboard' | 'yearly' | 'members' | 'projects' | 'analytics';
+
+function App() {
+  const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+
+  const navigation = [
+    { id: 'dashboard' as Page, name: '대시보드', icon: LayoutDashboard },
+    { id: 'yearly' as Page, name: '연간 가동률', icon: Target, badge: '90%' },
+    { id: 'members' as Page, name: '구성원 관리', icon: Users, badge: '66명' },
+    { id: 'projects' as Page, name: '프로젝트 관리', icon: FolderKanban },
+    { id: 'analytics' as Page, name: '분석 및 리포팅', icon: BarChart3 },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* 네비게이션 바 */}
+      <nav className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md shadow-xl border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                프로젝트 수행본부
+              </h1>
+              <p className="text-base text-gray-600 dark:text-gray-400 mt-1">
+                인력관리 시스템 | 총 66명 | 목표 90%
+              </p>
+            </div>
+          </div>
+
+          <div className="flex space-x-2 mt-6">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentPage === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentPage(item.id)}
+                  className={`flex items-center px-6 py-3 rounded-lg font-semibold text-base transition-all duration-200 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <Icon className="h-6 w-6 mr-2" />
+                  {item.name}
+                  {item.badge && (
+                    <span
+                      className={`ml-2 px-3 py-1 rounded-full text-sm font-bold ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-800'
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </nav>
+
+      {/* 메인 콘텐츠 */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {currentPage === 'dashboard' && <Dashboard />}
+        {currentPage === 'yearly' && <YearlyUtilization />}
+        {currentPage === 'members' && (
+          <div className="text-center py-20">
+            <Users className="h-24 w-24 mx-auto mb-6 text-gray-400" />
+            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">구성원 관리</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">66명의 팀원 정보를 관리할 수 있습니다.</p>
+          </div>
+        )}
+        {currentPage === 'projects' && (
+          <div className="text-center py-20">
+            <FolderKanban className="h-24 w-24 mx-auto mb-6 text-gray-400" />
+            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">프로젝트 관리</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              프로젝트 생성, 팀 구성, 검토 프로세스를 관리할 수 있습니다.
+            </p>
+          </div>
+        )}
+        {currentPage === 'analytics' && (
+          <div className="text-center py-20">
+            <BarChart3 className="h-24 w-24 mx-auto mb-6 text-gray-400" />
+            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">분석 및 리포팅</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              월별/분기별 Manmonth 추이 및 상세 분석을 확인할 수 있습니다.
+            </p>
+          </div>
+        )}
+      </main>
+
+      {/* 푸터 */}
+      <footer className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <p className="text-center text-base text-gray-600 dark:text-gray-400">
+            © 2024 프로젝트 수행본부 인력관리 시스템. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
