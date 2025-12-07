@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: project-manage-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+    healthCheckPath: /api/health
