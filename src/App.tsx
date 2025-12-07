@@ -1,12 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { YearlyUtilization } from './components/YearlyUtilization';
-import { LayoutDashboard, Target, Users, FolderKanban, BarChart3 } from 'lucide-react';
+import { MemberManagement } from './components/MemberManagement';
+import { ProjectManagement } from './components/ProjectManagement';
+import { Analytics } from './components/Analytics';
+import { Login } from './components/Login';
+import { LayoutDashboard, Target, Users, FolderKanban, BarChart3, LogOut } from 'lucide-react';
+import { removeAuthToken } from './services/api';
 
 type Page = 'dashboard' | 'yearly' | 'members' | 'projects' | 'analytics';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setIsLoading(false);
+  }, []);
+
+  const handleLogin = (userData: any) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    removeAuthToken();
+    localStorage.removeItem('user');
+    setUser(null);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-600">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-2xl text-white font-semibold">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   const navigation = [
     { id: 'dashboard' as Page, name: '대시보드', icon: LayoutDashboard },
@@ -29,6 +70,21 @@ function App() {
               <p className="text-base text-gray-600 dark:text-gray-400 mt-1">
                 인력관리 시스템 | 총 66명 | 목표 90%
               </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-right">
+                <p className="text-lg font-semibold text-gray-900 dark:text-white">{user.name}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {user.role === 'admin' ? '관리자' : user.role === 'manager' ? '매니저' : '일반 사용자'}
+                </p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <LogOut className="h-5 w-5 mr-2" />
+                로그아웃
+              </button>
             </div>
           </div>
 
@@ -69,31 +125,9 @@ function App() {
       <main className="max-w-7xl mx-auto px-6 py-8">
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'yearly' && <YearlyUtilization />}
-        {currentPage === 'members' && (
-          <div className="text-center py-20">
-            <Users className="h-24 w-24 mx-auto mb-6 text-gray-400" />
-            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">구성원 관리</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">66명의 팀원 정보를 관리할 수 있습니다.</p>
-          </div>
-        )}
-        {currentPage === 'projects' && (
-          <div className="text-center py-20">
-            <FolderKanban className="h-24 w-24 mx-auto mb-6 text-gray-400" />
-            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">프로젝트 관리</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
-              프로젝트 생성, 팀 구성, 검토 프로세스를 관리할 수 있습니다.
-            </p>
-          </div>
-        )}
-        {currentPage === 'analytics' && (
-          <div className="text-center py-20">
-            <BarChart3 className="h-24 w-24 mx-auto mb-6 text-gray-400" />
-            <h2 className="text-4xl font-bold text-gray-700 dark:text-gray-300 mb-4">분석 및 리포팅</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
-              월별/분기별 Manmonth 추이 및 상세 분석을 확인할 수 있습니다.
-            </p>
-          </div>
-        )}
+        {currentPage === 'members' && <MemberManagement />}
+        {currentPage === 'projects' && <ProjectManagement />}
+        {currentPage === 'analytics' && <Analytics />}
       </main>
 
       {/* 푸터 */}

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "U001",
+    "username": "admin",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "name": "김태윤",
+    "role": "admin"
+  },
+  {
+    "id": "U002",
+    "username": "manager",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "name": "박성민",
+    "role": "manager"
+  },
+  {
+    "id": "U003",
+    "username": "user",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "name": "이지훈",
+    "role": "user"
+  }
+]
