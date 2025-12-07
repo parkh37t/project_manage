@@ -1,53 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { YearlyUtilization } from './components/YearlyUtilization';
 import { MemberManagement } from './components/MemberManagement';
 import { ProjectManagement } from './components/ProjectManagement';
 import { Analytics } from './components/Analytics';
-import { Login } from './components/Login';
-import { LayoutDashboard, Target, Users, FolderKanban, BarChart3, LogOut } from 'lucide-react';
-import { removeAuthToken } from './services/api';
+import { LayoutDashboard, Target, Users, FolderKanban, BarChart3 } from 'lucide-react';
 
 type Page = 'dashboard' | 'yearly' | 'members' | 'projects' | 'analytics';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
-  const [user, setUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is logged in
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
-  }, []);
-
-  const handleLogin = (userData: any) => {
-    setUser(userData);
+  // Mock user for demo (백엔드 없이 작동)
+  const user = {
+    id: 'demo',
+    name: '데모 사용자',
+    role: 'admin'
   };
-
-  const handleLogout = () => {
-    removeAuthToken();
-    localStorage.removeItem('user');
-    setUser(null);
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-600">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-2xl text-white font-semibold">로딩 중...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Login onLogin={handleLogin} />;
-  }
 
   const navigation = [
     { id: 'dashboard' as Page, name: '대시보드', icon: LayoutDashboard },
@@ -78,13 +47,6 @@ function App() {
                   {user.role === 'admin' ? '관리자' : user.role === 'manager' ? '매니저' : '일반 사용자'}
                 </p>
               </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                <LogOut className="h-5 w-5 mr-2" />
-                로그아웃
-              </button>
             </div>
           </div>
 
